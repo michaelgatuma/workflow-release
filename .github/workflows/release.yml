@@ -35,12 +35,13 @@ jobs:
       - name: Build Project
         run: pnpm build
 
-      # - name: Create Release Pull Request
-      #   uses: changesets/action@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #   if: env.NPM_TOKEN == null
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: env.NPM_TOKEN == null
+
       - name: Create Release Pull Request and Publish to npm
         id: changesets
         uses: changesets/action@v1
@@ -49,4 +50,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        # if: env.NPM_TOKEN != null
+        if: env.NPM_TOKEN != null
