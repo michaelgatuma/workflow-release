@@ -35,6 +35,7 @@ jobs:
       - name: Build Project
         run: pnpm build
 
+      # If no NPM_TOKEN secret exists, just handle regular versioning
       - name: Create Release Pull Request
         uses: changesets/action@v1
         env:
@@ -42,6 +43,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: env.NPM_TOKEN == null
 
+      # If NPM_TOKEN secret exists, release to npm
       - name: Create Release Pull Request and Publish to npm
         id: changesets
         uses: changesets/action@v1
