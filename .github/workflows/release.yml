@@ -60,7 +60,7 @@ jobs:
 
       # If the branch is the staging branch, deploy with specific version (requires defining a pnpm release:staging script that calls changeset version)
       - name: (Staging) Create Release Pull Request and Publish to npm
-        id: changesets
+        id: changesets-staging
         uses: changesets/action@v1
         with:
           version: pnpm release:staging
@@ -72,7 +72,7 @@ jobs:
 
       # If the branch is production, deploy as usual
       - name: (Production) Create Release Pull Request and Publish to npm
-        id: changesets
+        id: changesets-production
         uses: changesets/action@v1
         with:
           publish: pnpm release
