@@ -63,8 +63,8 @@ jobs:
         id: changesets-staging
         uses: changesets/action@v1
         with:
-          version: pnpm release:staging
-          publish: pnpm release
+          version: pnpm version:staging
+          publish: pnpm release:staging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
