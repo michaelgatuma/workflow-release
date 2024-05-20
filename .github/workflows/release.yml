@@ -9,6 +9,18 @@ on:
     secrets:
       NPM_TOKEN:
         required: false
+      DEV_AUTH0_CLIENT_ID:
+        required: true
+      DEV_AUTH0_DOMAIN:
+        required: true
+      DEV_AUTH0_AUDIENCE:
+        required: true
+      PROD_AUTH0_CLIENT_ID:
+        required: true
+      PROD_AUTH0_DOMAIN:
+        required: true
+      PROD_AUTH0_AUDIENCE:
+        required: true
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -35,6 +47,30 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Set environment variables for development
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          echo "Setting up development environment"
+          echo "AUTH0_CLIENT_ID=${{ secrets.DEV_AUTH0_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "AUTH0_DOMAIN=${{ secrets.DEV_AUTH0_DOMAIN }}" >> $GITHUB_ENV
+          echo "AUTH0_AUDIENCE=${{ secrets.DEV_AUTH0_AUDIENCE }}" >> $GITHUB_ENV
+
+      - name: Set environment variables for production
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        run: |
+          echo "Setting up production environment"
+          echo "AUTH0_CLIENT_ID=${{ secrets.PROD_AUTH0_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "AUTH0_DOMAIN=${{ secrets.PROD_AUTH0_DOMAIN }}" >> $GITHUB_ENV
+          echo "AUTH0_AUDIENCE=${{ secrets.PROD_AUTH0_AUDIENCE }}" >> $GITHUB_ENV
+
+      - name: Create AUTH0_CONFIG file
+        run: |
+          echo "export const AUTH0_CONFIG = {
+            clientId: '${{ env.AUTH0_CLIENT_ID }}',
+            domain: '${{ env.AUTH0_DOMAIN }}',
+            audience: '${{ env.AUTH0_AUDIENCE }}',
+          };" > src/auth0-config.js
 
       - name: Build Project
         run: pnpm build
